@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { RecadosEntity } from "./entites/recados.entity";
 
 @Injectable()
@@ -15,6 +15,10 @@ export class RecadosService {
                 texto: "Te amo!"
             },
     ];
+
+    throwNotFoundExceptionById() {
+        throw new NotFoundException('Id do recado não encontrado!')
+    }
     
     async findAll() {
         return this.recados;
@@ -22,8 +26,9 @@ export class RecadosService {
     
     async findOne(id: number) {
         const resul = this.recados.find(item => item.id === +id)
-        console.log()
-        console.log(resul)
+        if(!resul) {
+           this.throwNotFoundExceptionById();
+        }
         return resul
     }
 
@@ -44,7 +49,7 @@ export class RecadosService {
        );
 
        if (recadosExistenteIndex === -1) {
-        return "recado não existente, por favor tente novamente com outro ID."
+        this.throwNotFoundExceptionById();
        }
        const recadoExistente = this.recados[recadosExistenteIndex];
 
@@ -63,7 +68,7 @@ export class RecadosService {
         );
         //se o item não for existente
         if(recadoExistenteIndex === -1) {
-            return "recado não existente, por favor tente novamente com outro ID."
+            this.throwNotFoundExceptionById();
         }
         this.recados.splice(recadoExistenteIndex, 1)
         return "item deletado com sucesso!"
