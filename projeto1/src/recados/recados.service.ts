@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { RecadosEntity } from "./entites/recados.entity";
+import { CreateRecadoDto } from "./dto/create-recado.dto";
+import { UpdateRecadoDto } from "./dto/update-recado.dto";
 
 @Injectable()
 export class RecadosService {
@@ -25,27 +27,29 @@ export class RecadosService {
     }
     
     async findOne(id: number) {
-        const resul = this.recados.find(item => item.id === +id)
+        const resul = this.recados.find(item => item.id === id)
         if(!resul) {
            this.throwNotFoundExceptionById();
         }
         return resul
     }
 
-    async create(body: any): Promise<RecadosEntity> {
+    async create(createRecadoDto: CreateRecadoDto): Promise<RecadosEntity> {
         this.lastId++;
         const id = this.lastId;
         const newRecado: RecadosEntity = {
             id,
-            ...body,
+            ...createRecadoDto,
+            lido: false,
+            dataRecado: new Date()
         }
         this.recados.push(newRecado);
         return newRecado;
     }
 
-    async update(id: number, body: any) {
+    async update(id: number, updateRecadoDto: UpdateRecadoDto) {
        const recadosExistenteIndex = this.recados.findIndex(
-        item => item.id === +id,
+        item => item.id === id,
        );
 
        if (recadosExistenteIndex === -1) {
@@ -55,7 +59,7 @@ export class RecadosService {
 
        const recadoAtualizado: RecadosEntity = this.recados[recadosExistenteIndex] = {
             ...recadoExistente,
-            ...body,
+            ...updateRecadoDto,
         };
 
         return recadoAtualizado;
@@ -64,7 +68,7 @@ export class RecadosService {
     async remove(id: number) {
         //busca o índice do objeto localizado no array pelo id
         const recadoExistenteIndex = this.recados.findIndex(
-            item => item.id === +id,
+            item => item.id === id,
         );
         //se o item não for existente
         if(recadoExistenteIndex === -1) {

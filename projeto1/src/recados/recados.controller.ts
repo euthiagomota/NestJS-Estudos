@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Put } from '@nestjs/common';
 import { RecadosService } from './recados.service';
+import { CreateRecadoDto } from './dto/create-recado.dto';
+import { UpdateRecadoDto } from './dto/update-recado.dto';
 
 @Controller('recados')
 export class RecadosController {
@@ -15,22 +17,22 @@ export class RecadosController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: number) {
+    findOne(@Param('id', ParseIntPipe) id: number) {
         return this.recadosService.findOne(id);
     }
 
     @Patch(':id')
-    updateRecado(@Param('id') id: number, @Body() body: any) {
-        return this.recadosService.update(id, body);
+    updateRecado(@Param('id', ParseIntPipe) id: number, @Body() UpdateRecadoDto: UpdateRecadoDto) {
+        return this.recadosService.update(id, UpdateRecadoDto);
     }
 
     @Post()
-    createRecado(@Body() body: any) {
-        return this.recadosService.create(body);
+    createRecado(@Body() createRecadoDto: CreateRecadoDto) {
+        return this.recadosService.create(createRecadoDto);
     }
 
     @Delete(':id')
-    deleteRecado(@Param('id') id: number) {
+    deleteRecado(@Param('id', ParseIntPipe) id: number) {
         return this.recadosService.remove(id);
     }
 }
