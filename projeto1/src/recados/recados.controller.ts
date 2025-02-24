@@ -8,7 +8,7 @@ export class RecadosController {
 
     constructor(
         private readonly recadosService: RecadosService
-    ) {}
+    ) { }
 
     @HttpCode(HttpStatus.OK)
     @Get()
@@ -17,22 +17,27 @@ export class RecadosController {
     }
 
     @Get(':id')
-    findOne(@Param('id', ParseIntPipe) id: number) {
+    findOne(
+        @Param('id', ParseIntPipe) id: number) {
         return this.recadosService.findOne(id);
     }
 
     @Patch(':id')
-    updateRecado(@Param('id', ParseIntPipe) id: number, @Body() UpdateRecadoDto: UpdateRecadoDto) {
+    updateRecado(
+        @Param('id', ParseIntPipe) id: number, 
+        @Body() UpdateRecadoDto: UpdateRecadoDto) {
         return this.recadosService.update(id, UpdateRecadoDto);
     }
 
     @Post()
-    createRecado(@Body() createRecadoDto: CreateRecadoDto) {
+    createRecado(
+        @Body() createRecadoDto: CreateRecadoDto) {
         return this.recadosService.create(createRecadoDto);
     }
 
     @Delete(':id')
-    deleteRecado(@Param('id', ParseIntPipe) id: number) {
+    deleteRecado(
+        @Param('id', ParseIntPipe) id: number) {
         return this.recadosService.remove(id);
     }
 }
